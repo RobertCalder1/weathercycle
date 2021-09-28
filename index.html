@@ -1,10 +1,27 @@
+<head> </head>
 <head>
-  <iframe
-    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12635.376297546893!2d145.0162697!3d-37.6528697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad64ec20ce4771f%3A0x3084b4cabd2ceeb3!2sOfficeworks%20Epping!5e0!3m2!1sen!2sau!4v1632742244934!5m2!1sen!2sau"
-    width="600"
-    height="450"
-    style="border: 0"
-    allowfullscreen=""
-    loading="lazy"
-  ></iframe>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="./assets/style.css" />
+  <title>WeatherCycle</title>
 </head>
+<body>
+  <header>
+    <h1>WEATHERCYCLE</h1>
+  </header>
+  <section class="row map-weather">
+    <div class="column left">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12635.376297546893!2d145.0162697!3d-37.6528697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad64ec20ce4771f%3A0x3084b4cabd2ceeb3!2sOfficeworks%20Epping!5e0!3m2!1sen!2sau!4v1632742244934!5m2!1sen!2sau"
+        style="border: 0"
+        width="550px"
+        height="450px"
+        allowfullscreen=""
+        loading="lazy"
+      ></iframe>
+    </div>
+    <div class="column right"><img src=./assets/images/placeholder.jpg></div>
+  </section>
+  <section class="row segment-container">
+    <div class="segments"></div>
+  </section>
+</body>
