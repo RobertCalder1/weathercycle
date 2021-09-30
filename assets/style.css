@@ -14,11 +14,12 @@ header {
 
 .column.left {
   width: 60vw;
+  height: 20vh;
 }
 .column.right {
   display: inline-block;
   width: 35vw;
-  height: 450px;
+  height: 20vh;
   border: black solid 1px;
   margin-left: 20px;
 }
