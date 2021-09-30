@@ -49,7 +49,28 @@ map.addEventListener("mapviewchange", function () {
   var mapCorners = mapView.b.bounds.cb.X;
   var corners = [mapCorners[9], mapCorners[10], mapCorners[3], mapCorners[4]];
   console.log(corners);
-  //add in strava top 10 segment coding
+  getSegmentTop10Data(corners)
 });
 
 moveMapToMelbourne(map);
+
+//function to get top 10 segments in the area.
+function getSegmentTop10Data (corners){
+  let apiUrl = "https://www.strava.com/api/v3/segments/explore?bounds=" + corners + "&activity_type=riding&min_cat=0&max_cat=5" ;
+  fetch(apiUrl, {
+      method:"GET",
+      headers: {
+          "Authorization": "Bearer 960309002a72d8c155f02fae8b8a517426d0543a ",
+          "Content-Type": "application/json"
+      }
+  })
+  .then(response => response.json())
+  .then(function (data){
+    console.log(data)  
+  })
+}
+
+
+
+
+
