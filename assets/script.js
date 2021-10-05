@@ -1,14 +1,12 @@
 var segmentRow = document.getElementById("segment-row");
 var corners;
 var checkCorners;
-var apiKey = "008f6Zpp12pnLUFDNojWj2nfBoDXAdjP4uyM2aVODZQ";
 var searchBtn = document.querySelector(".search-button");
 var searchBar = document.querySelector(".search-bar-input");
-var addressQuery =
-  "https://autocomplete.geocoder.ls.hereapi.com/6.2/suggest.json?query=" +
-  searchBar.textContent +
-  "&maxresults=3&apiKey=" +
-  apiKey;
+var newMarker;
+var segmentStartCoordinates = [];
+var segmentEndCoordinates = [];
+var tableRow = document.getElementsByClassName("segment");
 //create map on webpage
 var platform = new H.service.Platform({
   apikey: "008f6Zpp12pnLUFDNojWj2nfBoDXAdjP4uyM2aVODZQ",
@@ -56,25 +54,23 @@ var ms = new H.ui.MapSettingsControl({
 });
 ui.addControl("customized", ms);
 
-function getMapCorners() {
+function getMapCoordinates() {
   var mapView = map.getViewModel();
   var mapCorners = mapView.b.bounds.cb.X;
   corners = [mapCorners[9], mapCorners[10], mapCorners[3], mapCorners[4]];
-  console.log(corners);
+  var mapLocation = mapView.b.position;
 }
 
 function checkCornersValue() {
   var mapView = map.getViewModel();
   var mapCorners = mapView.b.bounds.cb.X;
   checkCorners = [mapCorners[9], mapCorners[10], mapCorners[3], mapCorners[4]];
-  console.log(checkCorners);
 }
 function waitToRun() {
   checkCornersValue();
 
   if (JSON.stringify(corners) !== JSON.stringify(checkCorners)) {
-    console.log(JSON.stringify(corners));
-    getMapCorners();
+    getMapCoordinates();
     fetchStravaData();
   }
   setTimeout(waitToRun, 2500);
@@ -93,7 +89,7 @@ function fetchStravaData() {
     method: "GET",
     headers: {
       //Update key every 6 hours
-      Authorization: "Bearer b54a0327dfe05094b2307f597ef0c8d63fa0cd5e",
+      Authorization: "Bearer deb1a78241df01da5ff2b9ec54244f0f710b4c5b",
       "Content-Type": "application/json",
     },
   })
@@ -117,9 +113,12 @@ function fetchStravaData() {
 
 //function to display the table under the map with top 10 segments
 function renderSegmentTable(data) {
+  cleanScreen();
   if (data.segments !== null) {
     for (var i = 0; i < data.segments.length; i++) {
       let newRow = document.createElement("tr");
+      newRow.setAttribute("class", "segment");
+      console.log(data.segments);
       segmentRow.appendChild(newRow);
 
       let segmentName = document.createElement("td");
@@ -150,6 +149,14 @@ function renderSegmentTable(data) {
       let lat2 = data.segments[i].end_latlng[0];
       let lon2 = data.segments[i].end_latlng[1];
       angleFromCoordinate(lat1, lon1, lat2, lon2, newRow);
+      newRow.setAttribute(
+        "data",
+        JSON.stringify({
+          start: data.segments[i].start_latlng,
+          end: data.segments[i].end_latlng,
+        })
+      );
+      newRow.addEventListener("mouseover", createRoute);
     }
     //console.log(data);
   } else {
@@ -159,6 +166,15 @@ function renderSegmentTable(data) {
   }
 }
 
+function cleanScreen() {
+  if (!segmentRow.firstChild) {
+    return;
+  } else {
+    while (segmentRow.firstChild) {
+      segmentRow.removeChild(segmentRow.firstChild);
+    }
+  }
+}
 //Function to get degrees from coordinates
 function angleFromCoordinate(lat1, lon1, lat2, lon2, newRow) {
   const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
@@ -201,7 +217,6 @@ fetchStravaData();
 
 //add function for search bar
 function geocode() {
-  console.log(searchBar.value);
   var geocoder = platform.getSearchService(),
     geocodingParameters = {
       q: searchBar.value,
@@ -213,11 +228,12 @@ function geocode() {
 function onSuccess(result) {
   console.log(result);
   var locations = result.items;
+  console.log(locations);
   var locationPosition = locations[0].position;
   console.log(locations);
   map.setCenter(locationPosition);
   if (locations[0].resultType === "locality") {
-    map.setZoom(10);
+    map.setZoom(13);
   } else {
     map.setZoom(16);
   }
@@ -226,14 +242,56 @@ function onSuccess(result) {
 function onError(error) {
   alert("Can't reach the remote server");
 }
-//create autocomplete function for address searches
-function autoComplete() {
-  fetch(addressQuery).then(function (response) {
-    console.log(response);
-    if (response.status === 200) {
-      responseText.textContent = response.status;
-    }
-    return response.json;
+
+function createRoute(event) {
+  var elem = event.target.parentNode;
+  console.log("event", elem);
+
+  var data = JSON.parse(elem.getAttribute("data"));
+  console.log(data);
+  console.log(data.start);
+  console.log(data.end);
+  var router = platform.getRoutingService(null, 8),
+    routeRequestParams = {
+      routingMode: "fast",
+      transportMode: "pedestrian",
+      origin: data.start.join(","),
+      destination: data.end.join(","),
+      return: "polyline,turnByTurnActions,actions,instructions,travelSummary",
+    };
+  router.calculateRoute(routeRequestParams, onSuccessRoute, onError);
+}
+
+function onSuccessRoute(result) {
+  var route = result.routes[0];
+  addRouteShapeToMap(route);
+  addManueversToMap(route);
+}
+function openBubble(position, text) {
+  if (!bubble) {
+    bubble = new H.ui.InfoBubble(
+      position,
+      // The FO property holds the province name.
+      { content: text }
+    );
+    ui.addBubble(bubble);
+  } else {
+    bubble.setPosition(position);
+    bubble.setContent(text);
+    bubble.open();
+  }
+}
+function addRouteShapeToMap(route) {
+  route.sections.forEach((section) => {
+    let linestring = H.geo.LineString.fromFlexiblePolyline(section.polyline);
+    let polyline = new H.map.Polyline(linestring, {
+      style: {
+        lineWidth: 8,
+        strokeColor: "rgba(207, 0, 15, 1)",
+      },
+    });
+
+    map.addObject(polyline);
   });
 }
 
@@ -243,4 +301,5 @@ searchBar.addEventListener("keypress", function (e) {
     geocode();
   }
 });
+
 moveMapToMelbourne(map);
