@@ -9,21 +9,28 @@
     <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
     <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
 </head>
+
 <body>
+
   <header>
     <h1>WEATHERCYCLE</h1>
   </header>
-  <section class="row map-weather">
-    
-    <div class="column left map">
-      <div class="search-bar">
-      <input class="search-bar-input" type="text" id="query" name="q" placeholder="Address/Suburb" />
+
+  <section class="display-flex">
+    <section class=" map-weather">
+      <div class="map">
+        <div class="search-bar">
+          <input class="search-bar-input" type="text" id="query" name="q" placeholder="  Address/Suburb" />
+        </div>
+      <div class="search-button"><button>Search</button>
+      </div>  
       </div>
-      <div class="search-button"><button>search</button></div>  
-    </div>
-    <div class="column right"><img src=./assets/images/placeholder.jpg></div>
+    </section>
+    <section id="weather-display" class="weather-container">
+    </section>
   </section>
-  <section class="row" >
+
+  <section >
     <table>
       <thead>
         <th>Name:</th>
