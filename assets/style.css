@@ -1,75 +1,71 @@
+body{
+  margin: 0;
+  background-color: #f3f3f3;
+}
+
 header {
+  background-color: #eb791c;
+  color: white;
+  padding: 1px;
+  margin-bottom: 15px;
   text-align: center;
   font-style: bolder;
-  display: inline;
 }
 
-.row {
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-}
-.column {
-  float: left;
+.display-flex{
+  display: flex;
 }
 
-.column.left {
-  width: 60vw;
+.map-weather{
+  margin-left: 15%;
+  
+  width: 50vw;
   height: 50vh;
-}
-.column.right {
-  display: inline-block;
-  width: 35vw;
-  height: 50vh;
-  border: black solid 1px;
-  margin-left: 20px;
-}
-
-.column.right img {
-  width: 100%;
-  height: 100%;
-}
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.segment-container {
-  border: black solid 1px;
-  width: 98vw;
-  height: 20vw;
-  margin-top: 10px;
 }
 
 .search-bar {
   position: absolute;
-  top: 10;
-  left: 10;
+  top: 130;
+  left: 310;
   z-index: 1;
 }
 
 .search-button {
   position: absolute;
-  top: 10;
-  left: 501;
+  top: 130;
+  left: 640;
   z-index: 2;
 }
 
 .search-button button {
   height: 30px;
-  border-radius: 8px;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
 }
 .search-bar input {
-  width: 500px;
+  width: 350px;
   height: 30px;
-  border-radius: 8px;
+  border-radius: 5px;
+}
+
+.weather-container{
+  background-color: white;
+  margin-left: 2%;
+  width: 17%;
+  border: 2px solid black;
+  border-radius: 5px ;
+  text-align: center;
+  
+}
+
+.underline{
+text-decoration: underline;
 }
 
 table {
   width: 70%;
   border-collapse: collapse;
-  margin: 25px 0;
+  margin: 15px 0;
   font-size: 0.9em;
   min-width: 400px;
   border-radius: 5px 5px 0 0;
@@ -96,12 +92,13 @@ table tbody tr {
 }
 
 table tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
+  background-color: white;
 }
 
 table tbody tr:last-of-type {
   border-bottom: 2px solid #cc6613;
 }
+
 
 .segment:hover {
   background-color: lightgoldenrodyellow;
