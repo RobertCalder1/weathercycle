@@ -1,15 +1,19 @@
 body{
+  font-family: 'Roboto', sans-serif;
   margin: 0;
   background-color: #f3f3f3;
 }
 
 header {
+  font-size: 24px;
+  font-family: 'Ephesis', cursive;
+  letter-spacing: 1px;
   background-color: #eb791c;
-  color: white;
   padding: 1px;
-  margin-bottom: 15px;
+  color: white;
   text-align: center;
   font-style: bolder;
+  margin-bottom: 20px;
 }
 
 .display-flex{
@@ -18,22 +22,21 @@ header {
 
 .map-weather{
   margin-left: 15%;
-  
   width: 50vw;
   height: 50vh;
 }
 
 .search-bar {
   position: absolute;
-  top: 130;
-  left: 310;
+  top: 160;
+  left: 300;
   z-index: 1;
 }
 
 .search-button {
   position: absolute;
-  top: 130;
-  left: 640;
+  top: 160;
+  left: 630;
   z-index: 2;
 }
 
@@ -42,6 +45,7 @@ header {
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
 }
+
 .search-bar input {
   width: 350px;
   height: 30px;
@@ -49,13 +53,34 @@ header {
 }
 
 .weather-container{
-  background-color: white;
+  background-color: #ffffff;
   margin-left: 2%;
   width: 17%;
-  border: 2px solid black;
+  border: 1px solid black;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   border-radius: 5px ;
   text-align: center;
-  
+  line-height: 0.9em;
+}
+
+.weather-container h3 {
+  margin-top: 2em;
+}
+
+.weather-container h3:last-of-type {
+  margin-top: 3em;
+}
+
+.weather-container p, h4, h5 {
+  text-align: left;
+  margin-left: 1.5em;
+}
+
+.weather-container p {
+  display: table;
+  padding: 5px;
+  margin-top: -5px;
+  border-radius: 5px;
 }
 
 .underline{
@@ -88,6 +113,7 @@ table td {
 }
 
 table tbody tr {
+  cursor: pointer;
   border-bottom: 1px solid #dddddd;
 }
 
@@ -99,7 +125,13 @@ table tbody tr:last-of-type {
   border-bottom: 2px solid #cc6613;
 }
 
+.segment-direction{
+border-radius: 2px;
+padding: 0px 5px;
+background-color: #5ce65c;
+}
 
 .segment:hover {
-  background-color: lightgoldenrodyellow;
+  background-color: rgba(245, 210, 165, 0.993);
 }
+
