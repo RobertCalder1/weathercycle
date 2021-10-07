@@ -231,8 +231,6 @@ function fetchStravaData() {
     });
 }
 
-fetchStravaData();
-
 //function to display the table under the map with top 10 segments
 function renderSegmentTable(data) {
   cleanScreen();
@@ -393,6 +391,7 @@ function displayWeather(data){
   else {
     windDirectionValueContentTo = windDirectionValueContentTo -180;
   }
+ 
   windDirection.textContent = "Wind Direction: " + degToCompassFrom(windDirectionValueContentFrom) + " to " + degToCompassTo(windDirectionValueContentTo)
   windDirection.setAttribute("class", "")
   weatherDisplay.appendChild(windDirection)

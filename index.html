@@ -9,21 +9,28 @@
     <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
     <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Ephesis&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
 
   <header>
     <h1>Weather Cycle</h1>
+    <a href="#second-page">
+      <div class="scroll-button"><i id="arrow-icon" class="fa fa-arrow-down" style="font-size:36px;"></i></div>
+    </a>
+    <p>To help you cath all the segments in your area</p>
   </header>
 
-  <section class="display-flex">
+  <section class="display-flex" id="second-page">
     <section class=" map-weather">
       <div class="map">
+        <div>
         <div class="search-bar">
           <input class="search-bar-input" type="text" id="query" name="q" placeholder="  Address/Suburb" />
         </div>
       <div class="search-button"><button>Search</button>
+        </div>
       </div>  
       </div>
     </section>
