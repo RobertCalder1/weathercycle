@@ -1,42 +1,82 @@
+html{
+  scroll-behavior: smooth;
+}
+
 body{
   font-family: 'Roboto', sans-serif;
   margin: 0;
+  padding: 0;
   background-color: #f3f3f3;
 }
 
 header {
-  font-size: 24px;
+  min-height: 100vh;
   font-family: 'Ephesis', cursive;
   letter-spacing: 1px;
   background-color: #eb791c;
   padding: 1px;
   color: white;
-  text-align: center;
+
   font-style: bolder;
-  margin-bottom: 20px;
+  
+}
+
+header h1{
+  position: absolute;
+  font-size: 160px;
+  bottom: 220;
+  left: 180;
+}
+header p{
+  position: absolute;
+  font-size: 80px;
+  left: 180;
+  bottom: 150;
+  
+}
+
+#arrow-icon{
+  padding: 18px;
+  color: white;
+  background-color: #eb791c;
+  border: 2px solid white;
+  position: absolute;
+  left: 58%;
+  bottom: 35%;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+#arrow-icon:hover{
+  background-color: white;
+  color: #eb791c;
+  
 }
 
 .display-flex{
   display: flex;
+  margin-top: 30px;
 }
 
 .map-weather{
+  margin-top: -60px;
   margin-left: 15%;
   width: 50vw;
   height: 50vh;
 }
 
 .search-bar {
-  position: absolute;
-  top: 160;
-  left: 300;
+  position: relative;
+  top: 80;
+  left: 20;
   z-index: 1;
 }
 
 .search-button {
-  position: absolute;
-  top: 160;
-  left: 630;
+  position: relative;
+  top: 50;
+  left: 350;
   z-index: 2;
 }
 
@@ -90,7 +130,7 @@ text-decoration: underline;
 table {
   width: 70%;
   border-collapse: collapse;
-  margin: 15px 0;
+  margin: 80px 0 20px 0 ;
   font-size: 0.9em;
   min-width: 400px;
   border-radius: 5px 5px 0 0;
@@ -134,4 +174,5 @@ background-color: #5ce65c;
 .segment:hover {
   background-color: rgba(245, 210, 165, 0.993);
 }
+
 
