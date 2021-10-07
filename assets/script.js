@@ -1,4 +1,6 @@
 var segmentRow = document.getElementById("segment-row");
+let windDirectionValueContentFrom ;
+let windDirectionValueContentTo ;
 var weatherDisplay = document.getElementById("weather-display")
 var corners;
 var checkCorners;
@@ -8,6 +10,7 @@ var newMarker;
 var segmentStartCoordinates = [];
 var segmentEndCoordinates = [];
 var tableRow = document.getElementsByClassName("segment");
+var accessToken="";
 
 //create map on webpage
 var platform = new H.service.Platform({
@@ -97,11 +100,8 @@ function geocode() {
 }
 
 function onSuccess(result) {
-  //console.log(result);
   var locations = result.items;
-  //console.log(locations);
   var locationPosition = locations[0].position;
-  //console.log(locations);
   map.setCenter(locationPosition);
   if (locations[0].resultType === "locality") {
     map.setZoom(13);
@@ -116,12 +116,8 @@ function onError(error) {
 
 function createRoute(event) {
   var elem = event.target.parentNode;
-  //console.log("event", elem);
 
   var data = JSON.parse(elem.getAttribute("data"));
-  //console.log(data);
-  //console.log(data.start);
-  //console.log(data.end);
   var router = platform.getRoutingService(null, 8),
     routeRequestParams = {
       routingMode: "fast",
@@ -175,38 +171,67 @@ searchBar.addEventListener("keypress", function (e) {
 
 moveMapToMelbourne(map);
 
+//fetch the Strava API key from refresh token
+function fetchStravaDataSample() {
+  let apiUrl =
+    "https://www.strava.com/oauth/token"
+  fetch(apiUrl, {
+         method: 'post',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+
+        },body: JSON.stringify({
+
+          client_id: '71858',
+          client_secret: '71a54d1b8ee4bf6130121c9544b5019459db5398',
+          refresh_token: '0a94c7fed1f350c609ecc44307cd3757b730da4d',
+          grant_type: 'refresh_token'
+      })
+    })
+    .then(function (response) {
+      if (response.ok) {
+        response.json().then(function (data) {
+          accessToken = data.access_token
+        });
+      } else {
+        return;
+      }
+    })
+    .catch(function (error) {
+      return;
+    });
+}
+
+fetchStravaDataSample()
+
 //function to get data from Strava API
 function fetchStravaData() {
   let apiUrl =
-    "https://www.strava.com/api/v3/segments/explore?bounds=" +
-    corners +
-    "&activity_type=riding&min_cat=0&max_cat=5";
-  //console.log(apiUrl);
+    "https://www.strava.com/api/v3/segments/explore?bounds=" + corners + "&activity_type=riding&min_cat=0&max_cat=5";
   fetch(apiUrl, {
     method: "GET",
     headers: {
       //Update key every 6 hours
-      Authorization: "Bearer deb1a78241df01da5ff2b9ec54244f0f710b4c5b",
+      Authorization: "Bearer " + accessToken,
       "Content-Type": "application/json",
     },
   })
     .then(function (response) {
       if (response.ok) {
-        ////console.log(response);
         response.json().then(function (data) {
-          ////console.log(data);
           renderSegmentTable(data);
         });
       } else {
-        //console.log("Error: " + response.statusText);
         return;
       }
     })
     .catch(function (error) {
-      //console.log("unable to connect with Strava API");
       return;
     });
 }
+
+fetchStravaData();
 
 //function to display the table under the map with top 10 segments
 function renderSegmentTable(data) {
@@ -215,7 +240,6 @@ function renderSegmentTable(data) {
     for (var i = 0; i < data.segments.length; i++) {
       let newRow = document.createElement("tr");
       newRow.setAttribute("class", "segment");
-      //console.log(data.segments);
       segmentRow.appendChild(newRow);
 
       let segmentName = document.createElement("td");
@@ -253,16 +277,14 @@ function renderSegmentTable(data) {
           end: data.segments[i].end_latlng,
         })
       );
-      newRow.addEventListener("mouseover", createRoute);
+      newRow.addEventListener("click", createRoute);
     }
-    ////console.log(data);
   } else {
-    //console.log(
-      //"No segments to display in this area. Please select a different area"
-    //);
+    return;
   }
 }
 
+//Remove old segments when updating the map
 function cleanScreen() {
   if (!segmentRow.firstChild) {
     return;
@@ -272,6 +294,7 @@ function cleanScreen() {
     }
   }
 }
+
 //Function to get degrees from coordinates
 function angleFromCoordinate(lat1, lon1, lat2, lon2, newRow) {
   const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
@@ -287,62 +310,57 @@ function angleFromCoordinate(lat1, lon1, lat2, lon2, newRow) {
   const brng = ((θ * 180) / Math.PI + 360) % 360; // in degrees
 
   avgDirectionSegment = document.createElement("td");
-  avgDirectionSegment.textContent = getDirection(brng);
   newRow.appendChild(avgDirectionSegment);
+  spanData = document.createElement("span")
+  spanData.textContent = getDirection(brng);
+  spanData.setAttribute("class", "segment-direction");
+  //check that segment direction is within 90 degrees of the wind direction
+  if (((brng >= windDirectionValueContentTo - 45) && (brng <= windDirectionValueContentTo +45)) || (brng === windDirectionValueContentTo)){
+    spanData.style.backgroundColor = "#5ce65c";
+  }
+  else{
+    spanData.style.backgroundColor = "#cccccc";
+  }
 
-  ////console.log(brng)
+  avgDirectionSegment.appendChild(spanData);
+
   getDirection(brng);
-  ////console.log(getDirection(brng))
 }
 
+//get compass coordinate value for segment direction
 function getDirection(brng) {
-  var directions = [
-    "North",
-    "North-East",
-    "East",
-    "South-East",
-    "South",
-    "South-West",
-    "West",
-    "North-West",
-  ];
-  var index = Math.round(((brng %= 360) < 0 ? brng + 360 : brng) / 45) % 8;
-  return directions[index];
+  var val = Math.floor((brng / 22.5) + 0.5);
+  var arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+  return arr[(val % 16)];
 }
 
-fetchStravaData();
-
+//fetch weather data 
 function fetchWeatherData(latitude, longitude) {
-  
   let apiUrl ='https://api.openweathermap.org/data/2.5/onecall?lat='+latitude+'&units=metric&lon='+longitude+'&appid=f8ed10bf86bf8687536af3bbc547d2af';
-  ////console.log(apiUrl);
   fetch(apiUrl)
     .then(function (response) {
       if (response.ok) {
-        //console.log(response);
         response.json().then(function (data) {
-          //console.log(data);
           displayWeather(data);
         });
       } else {
-        //console.log("Error: " + response.statusText);
         return;
       }
     })
     .catch(function (error) {
-      //console.log("unable to connect with Strava API");
       return;
     });
 }
 
 
+//function to display weather 
 function displayWeather(data){
   CleanScreenWeather()
 
   weatherDisplay.setAttribute("class", "weather-container");
 
   let currentWeatherTitle = document.createElement("h3")
-  currentWeatherTitle.textContent = "Current Weather Display";
+  currentWeatherTitle.textContent = "Current Wind Forecast";
   currentWeatherTitle.setAttribute("class", "underline");
   weatherDisplay.appendChild(currentWeatherTitle)
 
@@ -354,44 +372,55 @@ function displayWeather(data){
   let dateUnix = data.current.dt;
   let dateCalendar = new Date(dateUnix*1000);
 
-  let dateDisplay = document.createElement("h5");
+  let dateDisplay = document.createElement("h4");
   dateDisplay.textContent = dateCalendar.toLocaleDateString("en-GB");
   dateDisplay.setAttribute("class", "");
   weatherDisplay.appendChild(dateDisplay);
 
-  let windValue = document.createElement("p")
-  windValue.textContent = "Wind Speed: " + data.current.wind_speed + " Km/h";
-  windValue.setAttribute("class", "")
-  weatherDisplay.appendChild(windValue)
+  let windDisplay = document.createElement("p")
+  windValue = Math.round((data.current.wind_speed * 3.6) * 100) / 100
+  windDisplay.textContent = "Wind Speed: " + windValue + " Km/h";
+  windDisplay.setAttribute("class", "")
+  weatherDisplay.appendChild(windDisplay)
+  windBackgroundColor(windValue, windDisplay)
 
   let windDirection = document.createElement("p")
-  let windDirectionValue = data.current.wind_deg
-  windDirection.textContent = "Wind Direction: " + degToCompass(windDirectionValue)
+  windDirectionValueContentFrom = data.current.wind_deg
+  windDirectionValueContentTo = data.current.wind_deg
+  if (windDirectionValueContentTo <= 180){
+    windDirectionValueContentTo = windDirectionValueContentTo + 180;
+  }
+  else {
+    windDirectionValueContentTo = windDirectionValueContentTo -180;
+  }
+  windDirection.textContent = "Wind Direction: " + degToCompassFrom(windDirectionValueContentFrom) + " to " + degToCompassTo(windDirectionValueContentTo)
   windDirection.setAttribute("class", "")
   weatherDisplay.appendChild(windDirection)
-  degToCompass(windDirectionValue)
+  degToCompassFrom(windDirectionValueContentFrom)
+  degToCompassTo(windDirectionValueContentTo)
 
   let forecastWeatherTitle = document.createElement("h3")
-  forecastWeatherTitle.textContent = "Tomorrow's Weather Display";
+  forecastWeatherTitle.textContent = "Tomorrow's Wind Forecast";
   forecastWeatherTitle.setAttribute("class", "underline");
   weatherDisplay.appendChild(forecastWeatherTitle)
 
   let dateUnixForecast = data.daily[1].dt;
   let dateCalendarForecast = new Date(dateUnixForecast*1000);
 
-  let dateDisplayForecast = document.createElement("h5");
+  let dateDisplayForecast = document.createElement("h4");
   dateDisplayForecast.textContent = dateCalendarForecast.toLocaleDateString("en-GB");
   dateDisplayForecast.setAttribute("class", "");
   weatherDisplay.appendChild(dateDisplayForecast);
 
-  let windValueForecast = document.createElement("p")
-  windValueForecast.textContent = "Wind Speed: " + data.current.wind_speed + " Km/h";
-  windValueForecast.setAttribute("class", "")
-  weatherDisplay.appendChild(windValueForecast)
+  let windDisplayForecast = document.createElement("p")
+  windValueForecast = Math.round((data.daily[1].wind_speed * 3.6) * 100) / 100
+  windDisplayForecast.textContent = "Wind Speed: " + windValueForecast + " Km/h";
+  windDisplayForecast.setAttribute("class", "")
+  weatherDisplay.appendChild(windDisplayForecast)
+  windBackgroundColorForecast(windValueForecast, windDisplayForecast)
 
   let windDirectionForecast = document.createElement("p")
   let windDirectionValueForecast = data.daily[1].wind_deg;
-  //console.log(windDirectionValueForecast)
   windDirectionForecast.textContent = "Wind Direction: " + degToCompassForecast(windDirectionValueForecast)
   windDirectionForecast.setAttribute("class", "")
   weatherDisplay.appendChild(windDirectionForecast)
@@ -399,20 +428,50 @@ function displayWeather(data){
   degToCompassForecast(windDirectionValueForecast)
 }
 
-function degToCompass(windDirectionValue) {
-  var val = Math.floor((windDirectionValue / 22.5) + 0.5);
+//print compass coordinate on current weather forecast 
+function degToCompassFrom(brng) {
   var arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
-  return arr[(val % 16)];
+  var index = Math.round(((brng %= 360) < 0 ? brng + 360 : brng) / 22.5) % 16;
+  return arr[index];
 }
 
+//print compass coordinate on current weather forecast 
+function degToCompassTo(brng) {
+  var arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+  var index = Math.round(((brng %= 360) < 0 ? brng + 360 : brng) / 22.5) % 16;
+  return arr[index];
+}
+
+//print compass coordinate on tomorrow's weather forecast 
 function degToCompassForecast(windDirectionValueForecast) {
   var val = Math.floor((windDirectionValueForecast / 22.5) + 0.5);
   var arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
   return arr[(val % 16)];
 }
 
+//Change background color depending on the wind value on current weather forecast
+function windBackgroundColor(windValue, windDisplay) {
+  if(windValue < 15){
+    windDisplay.style.backgroundColor = "#cccccc";
+}else if(windValue < 35){
+    windDisplay.style.backgroundColor = "#70db70";
+}else{
+    windDisplay.style.backgroundColor = "#ff7733";
+}
+}
 
+//change background color on the wind value on tomorrow's weather forecast
+function windBackgroundColorForecast(windValueForecast, windDisplayForecast){
+  if(windValueForecast < 15){
+    windDisplayForecast.style.backgroundColor = "#cccccc";
+}else if(windValueForecast < 35){
+    windDisplayForecast.style.backgroundColor = "#70db70";
+}else{
+    windDisplayForecast.style.backgroundColor = "#ff7733";
+}
+}
 
+//clean screen on weather display
 function CleanScreenWeather(){
   if(!weatherDisplay.firstChild){
     return
