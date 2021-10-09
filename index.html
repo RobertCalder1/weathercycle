@@ -1,6 +1,8 @@
-<head> </head>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
   <link rel="stylesheet" href="./assets/style.css" />
   <title>WeatherCycle</title>
@@ -17,12 +19,12 @@
   <header>
     <h1>Weather Cycle</h1>
     <a href="#second-page">
-      <div class="scroll-button"><i id="arrow-icon" class="fa fa-arrow-down" style="font-size:36px;"></i></div>
+      <div class="scroll-button hide"><i id="arrow-icon" class="fa fa-arrow-down" style="font-size:36px;"></i></div>
     </a>
-    <p>To help you cath all the segments in your area</p>
+    <p class="hide">To help you cath all the segments in your area</p>
   </header>
 
-  <section class="display-flex" id="second-page">
+  <section class="display-flex" >
     <section class=" map-weather">
       <div class="map">
         <div>
@@ -38,7 +40,7 @@
     </section>
   </section>
 
-  <section >
+  <section id="second-page">
     <table>
       <thead>
         <th>Name:</th>
@@ -53,3 +55,4 @@
   </section>
   <script src=./assets/script.js></script>
 </body>
+</html>

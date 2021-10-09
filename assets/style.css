@@ -9,93 +9,73 @@ body{
   background-color: #f3f3f3;
 }
 
-header {
-  min-height: 100vh;
-  font-family: 'Ephesis', cursive;
-  letter-spacing: 1px;
-  background-color: #eb791c;
-  padding: 1px;
-  color: white;
+.hide{
+display: none;
+}
 
-  font-style: bolder;
-  
+header {
+  max-height: 40px;
+  padding: 1px 0px 5px 0px;
+  font-family: 'Ephesis', cursive;
+  background-color: #eb791c;
+  color: white;
+  font-style: bolder; 
 }
 
 header h1{
-  position: absolute;
-  font-size: 160px;
-  bottom: 220;
-  left: 180;
-}
-header p{
-  position: absolute;
-  font-size: 80px;
-  left: 180;
-  bottom: 150;
-  
+  text-align: center;
+  font-size: 20px; 
 }
 
-#arrow-icon{
-  padding: 18px;
-  color: white;
-  background-color: #eb791c;
-  border: 2px solid white;
-  position: absolute;
-  left: 58%;
-  bottom: 35%;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: 0.5s;
-}
-
-#arrow-icon:hover{
-  background-color: white;
-  color: #eb791c;
-  
-}
-
-.display-flex{
+body{
   display: flex;
-  margin-top: 30px;
+  flex-direction: column;
 }
+
 
 .map-weather{
-  margin-top: -60px;
-  margin-left: 15%;
-  width: 50vw;
-  height: 50vh;
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+  max-width: 450px;
+  height: 350px;
+  margin-top: -40px;
+  margin-bottom: 70px;
 }
 
 .search-bar {
   position: relative;
-  top: 80;
-  left: 20;
+  top: 70;
+  left: 10;
   z-index: 1;
 }
 
 .search-button {
   position: relative;
-  top: 50;
-  left: 350;
+  top: 42;
+  left: 250;
   z-index: 2;
 }
 
 .search-button button {
-  height: 30px;
+  height: 28px;
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
 }
 
 .search-bar input {
-  width: 350px;
-  height: 30px;
+  width: 250px;
+  height: 28px;
   border-radius: 5px;
 }
 
 .weather-container{
   background-color: #ffffff;
-  margin-left: 2%;
-  width: 17%;
+  max-width: 410px;
+  font-size: 0.8em;
+  margin-left: auto;
+  margin-right: auto;
+  width:90%;
   border: 1px solid black;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   border-radius: 5px ;
@@ -103,22 +83,15 @@ header p{
   line-height: 0.9em;
 }
 
-.weather-container h3 {
-  margin-top: 2em;
-}
-
-.weather-container h3:last-of-type {
-  margin-top: 3em;
-}
 
 .weather-container p, h4, h5 {
   text-align: left;
-  margin-left: 1.5em;
+  margin-left: 0.8em;
 }
 
 .weather-container p {
   display: table;
-  padding: 5px;
+  padding: 2px;
   margin-top: -5px;
   border-radius: 5px;
 }
@@ -128,11 +101,9 @@ text-decoration: underline;
 }
 
 table {
-  width: 70%;
   border-collapse: collapse;
-  margin: 80px 0 20px 0 ;
-  font-size: 0.9em;
-  min-width: 400px;
+  margin: 20px auto 20px auto ;
+  font-size: 0.7em;
   border-radius: 5px 5px 0 0;
   overflow: hidden;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
@@ -149,7 +120,7 @@ table thead tr {
 
 table th,
 table td {
-  padding: 12px 18px;
+  padding: 9px 9px;
 }
 
 table tbody tr {
@@ -171,8 +142,192 @@ padding: 0px 5px;
 background-color: #5ce65c;
 }
 
-.segment:hover {
-  background-color: rgba(245, 210, 165, 0.993);
+
+@media only screen and (min-width: 600px) {
+  .hide{
+    display: hide;
+  }
+  .map-weather{
+    width: 80%; 
+    max-width: 900px;
+   }
+ 
+  .weather-container{
+   width: 80%;
+   max-width: 900px;
+ }
+ 
+ table{
+   width: 80%;
+   max-width: 900px;
+ }
 }
 
+@media only screen and (min-width: 1200px) {
+  header{
+    background-color: eb791c;
+    min-height: 100vh;
+    letter-spacing: 1px;
+    padding: 1px;
+  }
+
+  .hide{
+    display: block;
+  }
+  header p{
+    position: absolute;
+    font-size: 70px;
+    left: 180;
+    bottom: 150;
+  }
+
+  header h1{
+    position: absolute;
+    font-size: 160px;
+    bottom: 220;
+    left: 180;
+  }
+  #arrow-icon{
+    padding: 18px;
+    color: white;
+    background-color: #eb791c;
+    border: 2px solid white;
+    position: absolute;
+    left: 68%;
+    bottom: 13%;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.5s;
+  }
+  #arrow-icon:hover{
+    background-color: white;
+    color: #eb791c;
+    
+  }
+  .display-flex{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  .map-weather{
+    margin-top: -60px;
+    margin-left: 15%;
+    max-width: 1000px;
+    width: 50%;
+    height: 480px;
+  }
+  
+  .search-bar {
+    position: relative;
+    top: 80;
+    left: 20;
+    z-index: 1;
+  }
+  
+  .search-button {
+    position: relative;
+    top: 50;
+    left: 350;
+    z-index: 2;
+  }
+  
+  .search-button button {
+    height: 30px;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  
+  .search-bar input {
+    width: 350px;
+    height: 30px;
+    border-radius: 5px;
+  }
+  
+  .weather-container{
+    background-color: #ffffff;
+    margin-right: 15%;
+    max-width: 340px;
+    font-size: 1.1em;
+    width: 17%;
+    border: 1px solid black;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-radius: 5px ;
+    text-align: center;
+    line-height: 0.9em;
+  }
+  
+  .weather-container h3 {
+    margin-top: 2em;
+  }
+  
+  .weather-container h3:last-of-type {
+    margin-top: 3em;
+  }
+  
+  .weather-container p, h4, h5 {
+    text-align: left;
+    margin-left: 1.5em;
+  }
+  
+  .weather-container p {
+    display: table;
+    padding: 5px;
+    margin-top: -5px;
+    border-radius: 5px;
+  }
+  
+  .underline{
+  text-decoration: underline;
+  }
+  
+  table {
+    width: 70%;
+    max-width: 1400px;
+    border-collapse: collapse;
+    margin: 20px 0 20px 0 ;
+    font-size: 0.9em;
+    min-width: 400px;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  table thead tr {
+    background-color: #cc6613;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  table th,
+  table td {
+    padding: 12px 18px;
+  }
+  
+  table tbody tr {
+    cursor: pointer;
+    border-bottom: 1px solid #dddddd;
+  }
+  
+  table tbody tr:nth-of-type(even) {
+    background-color: white;
+  }
+  
+  table tbody tr:last-of-type {
+    border-bottom: 2px solid #cc6613;
+  }
+  
+  .segment-direction{
+  border-radius: 2px;
+  padding: 0px 5px;
+  background-color: #5ce65c;
+  }
+  
+  .segment:hover {
+    background-color: rgba(245, 210, 165, 0.993);
+  }
+  
+}
 
