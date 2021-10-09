@@ -242,24 +242,20 @@ function renderSegmentTable(data) {
 
       let segmentName = document.createElement("td");
       segmentName.textContent = data.segments[i].name;
-      segmentName.setAttribute("class", "");
       newRow.appendChild(segmentName);
 
       let segmentDistance = document.createElement("td");
       let distanceinKM = data.segments[i].distance * 0.001;
       distanceinKM = (Math.round(distanceinKM * 100) / 100).toFixed(2);
       segmentDistance.textContent = distanceinKM + " Km";
-      segmentDistance.setAttribute("class", "");
       newRow.appendChild(segmentDistance);
 
       let segmentGrade = document.createElement("td");
       segmentGrade.textContent = data.segments[i].avg_grade + " %";
-      segmentGrade.setAttribute("class", "");
       newRow.appendChild(segmentGrade);
 
       let segmentElevation = document.createElement("td");
       segmentElevation.textContent = data.segments[i].elev_difference + " m";
-      segmentElevation.setAttribute("class", "");
       newRow.appendChild(segmentElevation);
 
       //data to get degrees and direction from start-finish segment
@@ -372,13 +368,11 @@ function displayWeather(data){
 
   let dateDisplay = document.createElement("h4");
   dateDisplay.textContent = dateCalendar.toLocaleDateString("en-GB");
-  dateDisplay.setAttribute("class", "");
   weatherDisplay.appendChild(dateDisplay);
 
   let windDisplay = document.createElement("p")
   windValue = Math.round((data.current.wind_speed * 3.6) * 100) / 100
   windDisplay.textContent = "Wind Speed: " + windValue + " Km/h";
-  windDisplay.setAttribute("class", "")
   weatherDisplay.appendChild(windDisplay)
   windBackgroundColor(windValue, windDisplay)
 
@@ -393,7 +387,6 @@ function displayWeather(data){
   }
  
   windDirection.textContent = "Wind Direction: " + degToCompassFrom(windDirectionValueContentFrom) + " to " + degToCompassTo(windDirectionValueContentTo)
-  windDirection.setAttribute("class", "")
   weatherDisplay.appendChild(windDirection)
   degToCompassFrom(windDirectionValueContentFrom)
   degToCompassTo(windDirectionValueContentTo)
@@ -408,20 +401,17 @@ function displayWeather(data){
 
   let dateDisplayForecast = document.createElement("h4");
   dateDisplayForecast.textContent = dateCalendarForecast.toLocaleDateString("en-GB");
-  dateDisplayForecast.setAttribute("class", "");
   weatherDisplay.appendChild(dateDisplayForecast);
 
   let windDisplayForecast = document.createElement("p")
   windValueForecast = Math.round((data.daily[1].wind_speed * 3.6) * 100) / 100
   windDisplayForecast.textContent = "Wind Speed: " + windValueForecast + " Km/h";
-  windDisplayForecast.setAttribute("class", "")
   weatherDisplay.appendChild(windDisplayForecast)
   windBackgroundColorForecast(windValueForecast, windDisplayForecast)
 
   let windDirectionForecast = document.createElement("p")
   let windDirectionValueForecast = data.daily[1].wind_deg;
   windDirectionForecast.textContent = "Wind Direction: " + degToCompassForecast(windDirectionValueForecast)
-  windDirectionForecast.setAttribute("class", "")
   weatherDisplay.appendChild(windDirectionForecast)
   
   degToCompassForecast(windDirectionValueForecast)
